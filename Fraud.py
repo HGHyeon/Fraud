@@ -5,7 +5,7 @@ from scipy.stats import chi2_contingency
 from scipy.stats import ttest_ind
 
 # DuckDB 데이터베이스 파일 경로
-DB_PATH = "C:/Users/hangh/OneDrive/바탕 화면/2학년_24-2/24-2_데이터베이스/Fraud/14주차 과제/DuckDB_Fraud_VSCode/insu.db"
+DB_PATH = "insu"
 conn = duckdb.connect(database=DB_PATH, read_only=True)
 
 # 쿼리 실행 및 데이터프레임 반환 함수
