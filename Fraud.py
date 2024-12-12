@@ -23,7 +23,7 @@ tab1, tab2 = st.tabs(["데이터 조회", "분석"])
 with tab1:
     st.header("< 테이블 데이터 조회 >")
     tables = ["information_schema.cust", "information_schema.claim", "information_schema.cntt"]
-    table_icons = {"cust": "👤", "claim": "📄", "cntt": "📑"}  # 테이블별 아이콘
+    table_icons = {"information_schema.cust": "👤", "information_schema.claim": "📄", "information_schema.cntt": "📑"}  # 테이블별 아이콘
 
     for table in tables:
         with st.expander(f"{table_icons[table]} 테이블: {table}", expanded=False):
