@@ -26,7 +26,7 @@ with tab1:
     table_icons = {"information_schema.cust": "👤", "information_schema.claim": "📄", "information_schema.cntt": "📑"}  # 테이블별 아이콘
 
     for table in tables:
-        with st.expander(f"{table_icons[table.split(".")[-1]]} 테이블: {table.split(".")[-1]}", expanded=False):
+        with st.expander(f"{table_icons[table]} 테이블: {table.split(".")[-1]}", expanded=False):
             query = f"SELECT * FROM {table} LIMIT 50"  # 테이블 내용 일부만 표시
             try:
                 table_data = conn.execute(query).fetchdf()
