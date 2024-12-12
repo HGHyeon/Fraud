@@ -23,7 +23,7 @@ tab1, tab2 = st.tabs(["데이터 조회", "분석"])
 with tab1:
     st.header("< 테이블 데이터 조회 >")
     tables = ["information_schema.cust", "information_schema.claim", "information_schema.cntt"]
-    table_icons = {"information_schema.cust": "👤", "information_schema.claim": "📄", "information_schema.cntt": "📑"}  # 테이블별 아이콘
+    table_icons = {"cust": "👤", "claim": "📄", "cntt": "📑"}  # 테이블별 아이콘
 
     for table in tables:
         with st.expander(f"{table_icons[table]} 테이블: {table}", expanded=False):
@@ -181,15 +181,15 @@ with tab2 :
     # 보험사기 청구
     fraud_claims = '''
     SELECT DMND_AMT
-    FROM claim c
-    JOIN cust cu
+    FROM information_schema.claim c
+    JOIN information_schema.cust cu
     ON c.CUST_ID = cu.CUST_ID
     WHERE cu.SIU_CUST_YN = 'Y'
     '''
     non_fraud_claims = '''
     SELECT DMND_AMT
-    FROM claim c
-    JOIN cust cu
+    FROM information_schema.claim c
+    JOIN information_schema.cust cu
     on c.CUST_ID = cu.CUST_ID
     WHERE cu.SIU_CUST_YN = 'N'
     '''
@@ -240,7 +240,7 @@ with tab2 :
         MAX(cl.DMND_AMT) AS max_claim_amount,
         COUNT(*) AS total_claims
     FROM 
-        claim cl, cust c
+        information_schema.claim cl, information_schema.cust c
     WHERE 
         c.CUST_ID = cl.CUST_ID
     GROUP BY 
@@ -269,8 +269,8 @@ with tab2 :
     SELECT 
         c.CUST_ID,
         COUNT(DISTINCT t.GOOD_CLSF_CDNM) AS product_changes
-    FROM cust c
-    JOIN cntt t
+    FROM information_schema.cust c
+    JOIN information_schema.cntt t
     ON c.CUST_ID = t.CUST_ID
     WHERE c.SIU_CUST_YN = 'Y'
     GROUP BY c.CUST_ID
@@ -299,8 +299,8 @@ with tab2 :
         SELECT 
             c.CUST_ID,
             COUNT(DISTINCT t.GOOD_CLSF_CDNM) AS product_changes
-        FROM cust c
-        JOIN cntt t
+        FROM information_schema.cust c
+        JOIN information_schema.cntt t
         ON c.CUST_ID = t.CUST_ID
         GROUP BY c.CUST_ID
     ) AS product_changes_all;
@@ -313,8 +313,8 @@ with tab2 :
         SELECT 
             c.CUST_ID,
             COUNT(DISTINCT t.GOOD_CLSF_CDNM) AS product_changes
-        FROM cust c
-        JOIN cntt t
+        FROM information_schema.cust c
+        JOIN information_schema.cntt t
         ON c.CUST_ID = t.CUST_ID
         GROUP BY c.CUST_ID
         ORDER BY product_changes DESC
@@ -343,8 +343,8 @@ with tab2 :
         SUM(CASE WHEN c.SIU_CUST_YN = 'N' THEN 1 ELSE 0 END) AS Non_Fraud_Count,
         COUNT(*) AS Total_Count,
         (SUM(CASE WHEN c.SIU_CUST_YN = 'Y' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS Fraud_Rate
-    FROM cntt cn
-    JOIN cust c
+    FROM information_schema.cntt cn
+    JOIN information_schema.cust c
     ON c.CUST_ID = cn.CUST_ID
     GROUP BY cn.GOOD_CLSF_CDNM
     ORDER BY Fraud_Rate DESC;
@@ -364,8 +364,8 @@ with tab2 :
         c.ACCI_DVSN,
         cu.SIU_CUST_YN,
         COUNT(*) AS cnt
-    FROM claim c
-    JOIN cust cu
+    FROM information_schema.claim c
+    JOIN information_schema.cust cu
     ON c.CUST_ID = cu.CUST_ID
     GROUP BY c.ACCI_DVSN, cu.SIU_CUST_YN
     ORDER BY c.ACCI_DVSN, cu.SIU_CUST_YN
@@ -422,8 +422,8 @@ with tab2 :
         COUNT(*) AS total_claims,
         SUM(CASE WHEN c.SIU_CUST_YN = 'Y' THEN 1 ELSE 0 END) AS fraud_claims
     FROM
-        claim cl
-    JOIN cust c
+        information_schema.claim cl
+    JOIN information_schema.cust c
         ON c.CUST_ID = cl.CUST_ID
     GROUP BY
         cl.ACCI_DVSN
@@ -453,9 +453,9 @@ with tab2 :
         MAX(cl.VLID_HOSP_OTDA) AS max_valid_days,
         COUNT(*) AS total_claims
     FROM
-        claim cl
+        information_schema.claim cl
     JOIN
-        cust c ON cl.CUST_ID = c.CUST_ID
+        information_schema.cust c ON cl.CUST_ID = c.CUST_ID
     WHERE
         c.SIU_CUST_YN = 'Y' -- 보험 사기로 등록된 고객만
     GROUP BY
