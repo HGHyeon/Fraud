@@ -461,7 +461,7 @@ with tab2 :
     GROUP BY
         cl.CUST_ID
     HAVING
-        avg_valid_days > (SELECT AVG(VLID_HOSP_OTDA) FROM claim) * 2 -- 평균의 2배 이상
+        avg_valid_days > (SELECT AVG(VLID_HOSP_OTDA) FROM information_schema.claim) * 2 -- 평균의 2배 이상
     ORDER BY
         avg_valid_days DESC;
     '''
