@@ -22,8 +22,8 @@ tab1, tab2 = st.tabs(["데이터 조회", "분석"])
 # 1. Insu 데이터베이스 조회
 with tab1:
     st.header("< 테이블 데이터 조회 >")
-    tables = ["cust", "claim", "cntt"]
-    table_icons = {"cust": "👤", "claim": "📄", "cntt": "📑"}  # 테이블별 아이콘
+    tables = ["information_schema.cust", "information_schema.claim", "information_schema.cntt"]
+    table_icons = {"information_schema.cust": "👤", "information_schema.claim": "📄", "information_schema.cntt": "📑"}  # 테이블별 아이콘
 
     for table in tables:
         with st.expander(f"{table_icons[table]} 테이블: {table}", expanded=False):
@@ -63,7 +63,7 @@ with tab2 :
         COUNT(*) AS total_customers,
         SUM(CASE WHEN SIU_CUST_YN = 'Y' THEN 1 ELSE 0 END) AS fraud_customers,
         ROUND(SUM(CASE WHEN SIU_CUST_YN = 'Y' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS fraud_ratio
-    FROM cust
+    FROM information_schema.cust
     """
     st.write("보험 사기자 비율:")
     duckdb(fraud_ratio)
@@ -77,7 +77,7 @@ with tab2 :
         WEDD_YN AS marriage_status,
         SIU_CUST_YN,
         COUNT(*) AS count
-    FROM cust
+    FROM information_schema.cust
     GROUP BY WEDD_YN, SIU_CUST_YN
     ORDER BY WEDD_YN, SIU_CUST_YN
     """
@@ -132,7 +132,7 @@ with tab2 :
         COUNT(*) AS total_count,
         ROUND(COUNT(CASE WHEN c.SIU_CUST_YN = 'Y' THEN 1 END) * 100.0 / COUNT(*),2) AS fraud_rate_percentage
     FROM
-        cust c
+        information_schema.cust c
     GROUP BY
         c.WEDD_YN,
         CASE
