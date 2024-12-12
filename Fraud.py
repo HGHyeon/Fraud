@@ -26,15 +26,15 @@ with tab1:
     table_icons = {"information_schema.cust": "👤", "information_schema.claim": "📄", "information_schema.cntt": "📑"}  # 테이블별 아이콘
 
     for table in tables:
-        with st.expander(f"{table_icons[table]} 테이블: {table}", expanded=False):
+        with st.expander(f"{table_icons[table.split(".")[-1]]} 테이블: {table.split(".")[-1]}", expanded=False):
             query = f"SELECT * FROM {table} LIMIT 50"  # 테이블 내용 일부만 표시
             try:
                 table_data = conn.execute(query).fetchdf()
 
                 # 검색 기능 추가
                 st.write("🔍 **데이터 검색**")
-                filter_col = st.selectbox(f"{table} 테이블에서 검색할 컬럼 선택", table_data.columns)
-                filter_val = st.text_input(f"{table} 테이블에서 `{filter_col}`로 검색")
+                filter_col = st.selectbox(f"{table.split(".")[-1]} 테이블에서 검색할 컬럼 선택", table_data.columns)
+                filter_val = st.text_input(f"{table.split(".")[-1]} 테이블에서 `{filter_col}`로 검색")
 
                 # 필터링
                 if filter_val:
@@ -44,13 +44,13 @@ with tab1:
                     st.dataframe(table_data)
 
                 # 전체 데이터 보기 버튼
-                if st.button(f"전체 데이터 보기 ({table})"):
+                if st.button(f"전체 데이터 보기 ({table.split(".")[-1]})"):
                     full_query = f"SELECT * FROM {table}"
                     full_data = conn.execute(full_query).fetchdf()
                     st.dataframe(full_data)
 
             except Exception as e:
-                st.error(f"{table} 테이블 조회 중 오류 발생: {e}")
+                st.error(f"{table.split(".")[-1]} 테이블 조회 중 오류 발생: {e}")
 
 # 2. 분석 쿼리 결과 출력
 with tab2 :
